@@ -13,7 +13,7 @@ class Router
 
         $controller = new $route->controller();
         $method = $route->method;
-        echo $controller->$method();
+        echo $controller->$method()->render();
     }
 
     public function addGet(string $path, string $controller, string $method): void

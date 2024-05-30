@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-use App\Application;
+use Framework\Application;
 
 spl_autoload_register(function ($class) {
     $base_dir = __DIR__ . "/src/";

@@ -3,10 +3,20 @@
 namespace Framework;
 
 use Infrastructure\Controller\Request;
+use Infrastructure\Controller\Web\StatusController;
 
 class Router
 {
     private array $routes = [];
+
+    private array $statusRoutes;
+
+    public function __construct()
+    {
+        $this->statusRoutes = [
+            "404" => new Route("", "", StatusController::class, "notFound"),
+        ];
+    }
 
     public function handle(): void
     {
@@ -47,6 +57,6 @@ class Router
             }
         }
 
-        throw new \Exception("No route");
+        return $this->statusRoutes["404"];
     }
 }

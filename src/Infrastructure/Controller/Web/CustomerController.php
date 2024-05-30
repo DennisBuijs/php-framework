@@ -8,10 +8,11 @@ use Application\GetCustomer\Transformer\WebCustomerTransformer;
 use Domain\Customer\CustomerRepository;
 use Infrastructure\Controller\Controller;
 use Infrastructure\Controller\Request;
+use Infrastructure\Controller\Response;
 
 class CustomerController implements Controller
 {
-    public function get(Request $request): HtmlResponse
+    public function get(Request $request): Response
     {
         $customerId = $request->getQuery("id");
 
@@ -23,24 +24,6 @@ class CustomerController implements Controller
         /** @var WebCustomer $customer */
         $customer = $useCase->execute();
 
-        return new HtmlResponse(
-            "
-            <table>
-                <tr>
-                    <td>First name</td>
-                    <td>" .
-                $customer->name .
-                "</td>
-                </tr>
-
-                <tr>
-                    <td>E-mail</td>
-                    <td>" .
-                $customer->email .
-                "</td>
-                </tr>
-            </table>
-        "
-        );
+        return new TemplateResponse("customer", ["customer" => $customer]);
     }
 }

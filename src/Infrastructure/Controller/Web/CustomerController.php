@@ -2,6 +2,9 @@
 
 namespace Infrastructure\Controller\Web;
 
+use Application\GetCustomer\Dto\WebCustomer;
+use Application\GetCustomer\GetCustomerUseCase;
+use Application\GetCustomer\Transformer\WebCustomerTransformer;
 use Domain\Customer\CustomerRepository;
 use Infrastructure\Controller\Controller;
 use Infrastructure\Controller\Request;
@@ -13,29 +16,20 @@ class CustomerController implements Controller
         $customerId = $request->getQuery("id");
 
         $customerRepository = new CustomerRepository();
-        $customer = $customerRepository->getById($customerId);
+        $customerTransformer = new WebCustomerTransformer();
+
+        $useCase = new GetCustomerUseCase($customerRepository, $customerTransformer, $customerId);
+
+        /** @var WebCustomer $customer */
+        $customer = $useCase->execute();
 
         return new HtmlResponse(
             "
             <table>
                 <tr>
-                    <td>ID</td>
-                    <td>" .
-                $customer->id .
-                "</td>
-                </tr>
-
-                <tr>
                     <td>First name</td>
                     <td>" .
-                $customer->firstName .
-                "</td>
-                </tr>
-
-                <tr>
-                    <td>Last name</td>
-                    <td>" .
-                $customer->lastName .
+                $customer->name .
                 "</td>
                 </tr>
 

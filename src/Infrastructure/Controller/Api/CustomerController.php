@@ -2,6 +2,9 @@
 
 namespace Infrastructure\Controller\Api;
 
+use Application\GetCustomer\Dto\ApiCustomer;
+use Application\GetCustomer\Transformer\ApiCustomerTransformer;
+use Application\GetCustomer\GetCustomerUseCase;
 use Domain\Customer\CustomerRepository;
 use Infrastructure\Controller\Controller;
 use Infrastructure\Controller\Api\JsonResponse;
@@ -14,8 +17,13 @@ class CustomerController implements Controller
         $customerId = $request->getQuery("id");
 
         $customerRepository = new CustomerRepository();
-        $customer = $customerRepository->getById($customerId);
+        $customerTransformer = new ApiCustomerTransformer();
 
-        return new JsonResponse($customer);
+        $useCase = new GetCustomerUseCase($customerRepository, $customerTransformer, $customerId);
+
+        /** @var ApiCustomer $customer */
+        $customer = $useCase->execute();
+
+        return new JsonResponse((array) $customer);
     }
 }

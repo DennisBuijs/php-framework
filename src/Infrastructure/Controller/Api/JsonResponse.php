@@ -7,7 +7,7 @@ use JsonSerializable;
 
 class JsonResponse implements Response
 {
-    public function __construct(private readonly JsonSerializable $body)
+    public function __construct(private readonly JsonSerializable|array $body)
     {
     }
 

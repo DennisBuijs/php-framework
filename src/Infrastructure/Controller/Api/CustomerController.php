@@ -2,13 +2,20 @@
 
 namespace Infrastructure\Controller\Api;
 
+use Domain\Customer\CustomerRepository;
 use Infrastructure\Controller\Controller;
 use Infrastructure\Controller\Api\JsonResponse;
+use Infrastructure\Controller\Request;
 
 class CustomerController implements Controller
 {
-    public function index(): JsonResponse
+    public function get(Request $request): JsonResponse
     {
-        return new JsonResponse(["hello" => "world"]);
+        $customerId = $request->getQuery("id");
+
+        $customerRepository = new CustomerRepository();
+        $customer = $customerRepository->getById($customerId);
+
+        return new JsonResponse($customer);
     }
 }

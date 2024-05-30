@@ -8,8 +8,9 @@ class Application
     {
         $router = new Router();
 
-        $router->addGet("/web/index", \Infrastructure\Controller\Web\CustomerController::class, "index");
-        $router->addGet("/api/index", \Infrastructure\Controller\Api\CustomerController::class, "index");
+        $router->addGet("/web/customer/:id", \Infrastructure\Controller\Web\CustomerController::class, "get");
+
+        $router->addGet("/api/customer/:id", \Infrastructure\Controller\Api\CustomerController::class, "get");
 
         $router->handle();
     }

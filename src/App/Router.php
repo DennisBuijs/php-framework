@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Infrastructure\Controller\Request;
+
 class Router
 {
     private array $routes = [];
@@ -13,7 +15,7 @@ class Router
 
         $controller = new $route->controller();
         $method = $route->method;
-        echo $controller->$method()->render();
+        echo $controller->$method(new Request($route->getParameters()))->render();
     }
 
     public function addGet(string $path, string $controller, string $method): void
@@ -24,9 +26,24 @@ class Router
 
     private function matchRoute(string $path): Route
     {
+        usort($this->routes, function ($a, $b) {
+            return substr_count($b->path, "/") - substr_count($a->path, "/") ?:
+                substr_count($a->path, ":") - substr_count($b->path, ":");
+        });
+
         foreach ($this->routes as $route) {
-            if ($route->path === $path) {
-                return $route;
+            $pattern = preg_replace("/:\w+/", "([^/]+)", $route->path);
+            $pattern = str_replace("/", "\/", $pattern);
+            if (preg_match("/^" . $pattern . '$/', $path, $matches)) {
+                array_shift($matches);
+
+                $params = [];
+                preg_match_all("/:(\w+)/", $route->path, $paramNames);
+                foreach ($paramNames[1] as $index => $name) {
+                    $params[$name] = $matches[$index];
+                }
+
+                return $route->withParameters($params);
             }
         }
 

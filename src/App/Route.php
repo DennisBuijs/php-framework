@@ -2,13 +2,27 @@
 
 namespace App;
 
-readonly class Route
+class Route
 {
+    private array $parameters;
+
     public function __construct(
-        public string $verb,
-        public string $path,
-        public string $controller,
-        public string $method
+        public readonly string $verb,
+        public readonly string $path,
+        public readonly string $controller,
+        public readonly string $method
     ) {
+        $this->parameters = [];
+    }
+
+    public function withParameters(array $parameters): self
+    {
+        $this->parameters = $parameters;
+        return $this;
+    }
+
+    public function getParameters(): array
+    {
+        return $this->parameters;
     }
 }

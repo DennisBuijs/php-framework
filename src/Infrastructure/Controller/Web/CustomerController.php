@@ -3,6 +3,7 @@
 namespace Infrastructure\Controller\Web;
 
 use Application\GetCustomer\Dto\WebCustomer;
+use Application\GetCustomer\GetAllCustomersUseCase;
 use Application\GetCustomer\GetCustomerUseCase;
 use Application\GetCustomer\Transformer\WebCustomerTransformer;
 use Domain\Customer\CustomerRepository;
@@ -25,5 +26,17 @@ class CustomerController implements Controller
         $customer = $useCase->execute();
 
         return new TemplateResponse("customer", ["customer" => $customer]);
+    }
+
+    public function getAll(): Response
+    {
+        $customerRepository = new CustomerRepository();
+        $customerTransformer = new WebCustomerTransformer();
+
+        $useCase = new GetAllCustomersUseCase($customerRepository, $customerTransformer);
+
+        $customers = $useCase->execute();
+
+        return new TemplateResponse("customer_list", ["customers" => $customers]);
     }
 }

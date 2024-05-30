@@ -17,6 +17,11 @@ class CustomerRepository
         throw new DomainException("Customer not found");
     }
 
+    public function getAll(): array
+    {
+        return $this->getMock();
+    }
+
     private function getMock(): array
     {
         return [

@@ -2,6 +2,7 @@
 
 namespace Domain\Customer;
 
+use Application\CreateCustomer\Dto\CreateCustomer;
 use DomainException;
 
 class CustomerRepository
@@ -20,6 +21,20 @@ class CustomerRepository
     public function getAll(): array
     {
         return $this->getMock();
+    }
+
+    public function create(CreateCustomer $createCustomer): Customer
+    {
+        $customer = new Customer(
+            "0f8cbb7a-c8b9-4761-995e-80542f721de8",
+            $createCustomer->firstName,
+            $createCustomer->lastName,
+            $createCustomer->email
+        );
+
+        $this->getMock()[] = $customer;
+
+        return $customer;
     }
 
     private function getMock(): array

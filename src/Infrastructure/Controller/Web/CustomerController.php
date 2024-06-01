@@ -2,6 +2,8 @@
 
 namespace Infrastructure\Controller\Web;
 
+use Application\CreateCustomer\CreateCustomerUseCase;
+use Application\CreateCustomer\Dto\CreateCustomer;
 use Application\GetCustomer\Dto\WebCustomer;
 use Application\GetCustomer\GetAllCustomersUseCase;
 use Application\GetCustomer\GetCustomerUseCase;
@@ -38,5 +40,33 @@ class CustomerController implements Controller
         $customers = $useCase->execute();
 
         return new TemplateResponse("customer_list", ["customers" => $customers]);
+    }
+
+    public function getForm(): Response
+    {
+        return new TemplateResponse("customer_form", []);
+    }
+
+    public function postForm(Request $request): Response
+    {
+        $customer = new CreateCustomer(
+            $request->getInput("firstName"),
+            $request->getInput("lastName"),
+            $request->getInput("email")
+        );
+
+        $customerRepository = new CustomerRepository();
+        $customerTransformer = new WebCustomerTransformer();
+
+        $createCustomerUseCase = new CreateCustomerUseCase($customerRepository, $customerTransformer, $customer);
+        $createCustomerUseCase->execute();
+
+        $useCase = new GetAllCustomersUseCase($customerRepository, $customerTransformer);
+        $customers = $useCase->execute();
+
+        return new TemplateResponse("customer_form", [
+            "message" => "Saved!",
+            "customers" => $customers,
+        ]);
     }
 }

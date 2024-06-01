@@ -21,11 +21,16 @@ class Router
     public function handle(): void
     {
         $uri = $_SERVER["REQUEST_URI"];
-        $route = $this->matchRoute($uri);
+        $verb = $_SERVER["REQUEST_METHOD"];
+
+        $route = $this->matchRoute($verb, $uri);
 
         $controller = new $route->controller();
         $method = $route->method;
-        echo $controller->$method(new Request($route->getParameters()))->render();
+
+        $request = new Request($route->getParameters(), $_POST);
+
+        echo $controller->$method($request)->render();
     }
 
     public function addGet(string $path, string $controller, string $method): void
@@ -34,7 +39,13 @@ class Router
         $this->routes[] = $route;
     }
 
-    private function matchRoute(string $path): Route
+    public function addPost(string $path, string $controller, string $method): void
+    {
+        $route = new Route("POST", $path, $controller, $method);
+        $this->routes[] = $route;
+    }
+
+    private function matchRoute(string $verb, string $path): Route
     {
         usort($this->routes, function ($a, $b) {
             return substr_count($b->path, "/") - substr_count($a->path, "/") ?:
@@ -42,6 +53,10 @@ class Router
         });
 
         foreach ($this->routes as $route) {
+            if ($route->verb !== $verb) {
+                continue;
+            }
+
             $pattern = preg_replace("/:\w+/", "([^/]+)", $route->path);
             $pattern = str_replace("/", "\/", $pattern);
             if (preg_match("/^" . $pattern . '$/', $path, $matches)) {

@@ -4,9 +4,19 @@ namespace Domain\Customer;
 
 use Application\CreateCustomer\Dto\CreateCustomer;
 use DomainException;
+use Infrastructure\Persistence\Database;
+use Infrastructure\Persistence\Sqlite\Sqlite;
 
 class CustomerRepository
 {
+    private readonly Database $db;
+
+    public function __construct()
+    {
+        // This needs to be injected in the future
+        $this->db = new Sqlite();
+    }
+
     public function getById(string $id): Customer
     {
         foreach ($this->getMock() as $customer) {
@@ -18,9 +28,17 @@ class CustomerRepository
         throw new DomainException("Customer not found");
     }
 
-    public function getAll(): array
+    public function getAll(): CustomerCollection
     {
-        return $this->getMock();
+        $result = $this->db->query("SELECT * FROM customers", []);
+
+        $customers = new CustomerCollection();
+
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            $customers->add(new Customer($row["id"], $row["first_name"], $row["last_name"], $row["email"]));
+        }
+
+        return $customers;
     }
 
     public function create(CreateCustomer $createCustomer): Customer
@@ -32,7 +50,16 @@ class CustomerRepository
             $createCustomer->email
         );
 
-        $this->getMock()[] = $customer;
+        $this->db->query(
+            'INSERT INTO "customers" ("id", "first_name", "last_name", "email")
+            VALUES (:id, :first_name, :last_name, :email)',
+            [
+                "id" => $customer->id,
+                "first_name" => $customer->firstName,
+                "last_name" => $customer->lastName,
+                "email" => $customer->email,
+            ]
+        );
 
         return $customer;
     }

@@ -23,6 +23,6 @@ class GetAllCustomersUseCase implements UseCase
             return [];
         }
 
-        return array_map(fn($customer) => $this->transformer->transform($customer), $customers->all());
+        return array_map(fn($customer) => $this->transformer->transform($customer), iterator_to_array($customers));
     }
 }

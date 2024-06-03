@@ -2,15 +2,18 @@
 
 namespace Domain\Customer;
 
-use Infrastructure\Collection\Collection;
+use Kipkron\Collection\Collection;
 
 /** @extends Collection<Customer> */
 class CustomerCollection extends Collection
 {
+    public function __construct()
+    {
+        $this->of(Customer::class);
+    }
+
     public function filterEmail(string $email): CustomerCollection
     {
-        return CustomerCollection::fromArray(
-            array_filter($this->all(), static fn(Customer $customer) => $customer->email === $email)
-        );
+        return $this->filter(static fn(Customer $customer) => $customer->email === $email);
     }
 }

@@ -1,0 +1,62 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "7ddb4fe246c18c16a9b4f61bbc545dc8",
+    "packages": [
+        {
+            "name": "kipkron/collection",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/DennisBuijs/Collections.git",
+                "reference": "f854207d1ac73ac371c561a78744984b2b05ab2e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/DennisBuijs/Collections/zipball/f854207d1ac73ac371c561a78744984b2b05ab2e",
+                "reference": "f854207d1ac73ac371c561a78744984b2b05ab2e",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^11.1"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Kipkron\\Collection\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dennis Buijs",
+                    "email": "dennisdennisbuijs@gmail.com"
+                }
+            ],
+            "description": "Implementation of the Collection pattern",
+            "support": {
+                "issues": "https://github.com/DennisBuijs/Collections/issues",
+                "source": "https://github.com/DennisBuijs/Collections/tree/v.0.0.1"
+            },
+            "time": "2024-06-02T13:50:16+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "kipkron/collection": 20
+    },
+    "prefer-stable": true,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
+}

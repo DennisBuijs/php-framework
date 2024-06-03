@@ -1,0 +1,7 @@
+{
+  "require": {
+    "kipkron/collection": "dev-main"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
